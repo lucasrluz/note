@@ -1,5 +1,6 @@
 package com.api.note.models;
 
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +26,9 @@ public class UserModel {
 
     @Column(nullable = false)
     public String password;
+
+    @OneToMany(mappedBy = "userModel")
+    public Set<NoteModel> noteModel; 
 
     public UserModel(String name, String email, String password) {
         this.name = name;
