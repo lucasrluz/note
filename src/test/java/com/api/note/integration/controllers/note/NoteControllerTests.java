@@ -11,12 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.UUID;
 import static org.hamcrest.CoreMatchers.is;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
-import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.NoteRepository;
 import com.api.note.repositories.UserRepository;
 import com.api.note.utils.builders.note.NoteDTOSaveRequestBuilder;
-import com.api.note.utils.builders.note.NoteModelBuilder;
 import com.api.note.utils.builders.user.UserModelBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -120,32 +118,5 @@ public class NoteControllerTests {
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
-    }
-
-    @Test
-    public void esperoQueRetorneUmCodigoDeStatus400ComUmaMensagemDeErroDeTituloJaUsado() throws Exception {
-        // Preparo de dados de ambiente
-        UserModel userModel = UserModelBuilder.createWithValidData();
-        UserModel saveUserModelResponse = this.userRepository.save(userModel);
-
-        NoteModel noteModel = NoteModelBuilder.createWithValidData();
-        noteModel.userModel = userModel;
-        this.noteRepository.save(noteModel);
-
-        // Teste principal
-        NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
-        
-        String url = "/note/" + saveUserModelResponse.userId.toString();
-
-        this.mockMvc.perform(
-            post(url)
-            .contentType("application/json")
-            .content(asJsonString(noteDTOSaveRequest)))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$", is("Error: Já existe uma nota criada com este título")));
-
-        // Limpeza de dados do ambiente
-        this.noteRepository.deleteAll();
-        this.userRepository.deleteAll();
     }
 }

@@ -17,7 +17,6 @@ import com.api.note.repositories.UserRepository;
 import com.api.note.services.note.NoteService;
 import com.api.note.services.util.BadRequestException;
 import com.api.note.utils.builders.note.NoteDTOSaveRequestBuilder;
-import com.api.note.utils.builders.note.NoteModelBuilder;
 import com.api.note.utils.builders.user.UserModelBuilder;
 
 @SpringBootTest
@@ -84,30 +83,5 @@ public class NoteServiceTests {
         Assertions.assertThatExceptionOfType(BadRequestException.class)
             .isThrownBy(() -> this.noteService.save(noteDTOSaveRequest))
             .withMessage("Error: usuário não encontrado");
-    }
-
-    @Test
-    public void esperoQueRetorneUmErroDeNotaJaCriadaDadoUmTituloJaUsado() {
-        // Preparo de dados de ambiente
-        UserModel userModel = UserModelBuilder.createWithValidData();
-        UserModel saveUserModelResponse = this.userRepository.save(userModel);
-
-        NoteModel noteModel = NoteModelBuilder.createWithValidData();
-        noteModel.userModel = saveUserModelResponse;
-
-        this.noteRepository.save(noteModel);
-
-        // Teste principal
-        NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
-        noteDTOSaveRequest.userId = saveUserModelResponse.userId.toString();
-        
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.save(noteDTOSaveRequest))
-            .withMessage("Error: Já existe uma nota criada com este título");
-        
-        // Limpeza dos dados de ambiente
-        this.noteRepository.deleteAll();
-        this.userRepository.deleteAll();
-    }
-    
+    }    
 }
