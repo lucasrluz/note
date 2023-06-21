@@ -39,16 +39,6 @@ public class NoteService {
             throw new BadRequestException("Error: usuário não encontrado");
         }
 
-        boolean findNoteByTitleResponse = this.noteRepository.existsByTitle(
-            noteDomain.getTitle()
-        );
-
-        if (findNoteByTitleResponse) {
-            throw new BadRequestException(
-                "Error: Já existe uma nota criada com este título"
-            );
-        }
-
         NoteModel noteModel = new NoteModel(
             noteDomain.getTitle(),
             noteDomain.getContent(),
