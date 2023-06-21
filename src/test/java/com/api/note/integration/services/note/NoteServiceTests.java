@@ -17,6 +17,7 @@ import com.api.note.repositories.UserRepository;
 import com.api.note.services.note.NoteService;
 import com.api.note.services.util.BadRequestException;
 import com.api.note.utils.builders.note.NoteDTOSaveRequestBuilder;
+import com.api.note.utils.builders.note.NoteModelBuilder;
 import com.api.note.utils.builders.user.UserModelBuilder;
 
 @SpringBootTest
@@ -51,6 +52,29 @@ public class NoteServiceTests {
 
         Assertions.assertThat(noteModel.content).isEqualTo("Foo bar");
         Assertions.assertThat(noteModel.userModel.userId).isEqualTo(userModel.userId);
+
+        // Limpeza dos dados de ambiente
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+    }
+
+    @Test
+    public void esperoQueSalveDuasNotasComOMesmoTituloNoSistema() throws InvalidNoteDomainException, BadRequestException {
+        // Preparo de dados de ambiente
+        UserModel userModel = UserModelBuilder.createWithValidData();
+        UserModel saveUserModelResponse = this.userRepository.save(userModel);
+
+        NoteModel noteModel = NoteModelBuilder.createWithValidData();
+        noteModel.userModel = userModel;
+        this.noteRepository.save(noteModel);
+
+        // Teste principal
+        NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
+        noteDTOSaveRequest.userId = saveUserModelResponse.userId.toString();
+
+        NoteDTOSaveResponse noteDTOSaveResponse = this.noteService.save(noteDTOSaveRequest);
+
+        Assertions.assertThat(noteDTOSaveResponse.title).isEqualTo("Foo Bar");
 
         // Limpeza dos dados de ambiente
         this.noteRepository.deleteAll();
