@@ -18,7 +18,7 @@ public class NoteModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID noteId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     public String title;
 
     @Column(nullable = false, unique = false)
