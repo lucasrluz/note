@@ -1,5 +1,7 @@
 package com.api.note.services.note;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.api.note.domains.note.NoteDomain;
 import com.api.note.domains.note.exceptions.InvalidNoteDomainException;
+import com.api.note.dtos.note.NoteDTOFindByTitleRequest;
+import com.api.note.dtos.note.NoteDTOFindByTitleResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
 import com.api.note.models.NoteModel;
@@ -51,5 +55,37 @@ public class NoteService {
             saveNoteModelResponse.noteId.toString(),
             saveNoteModelResponse.title
         );
+    }
+
+    public List<NoteDTOFindByTitleResponse> findByTitle(NoteDTOFindByTitleRequest noteDTOFindByTitleRequest) throws BadRequestException {
+        Optional<UserModel> findUserModelByUserIdResponse = this.userRepository.findById(
+            UUID.fromString(noteDTOFindByTitleRequest.userId)
+        );
+
+        if (findUserModelByUserIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: usuário não encontrado");
+        }
+
+        List<NoteModel> findNotesByTitleResponse = this.noteRepository.findByTitleAndUserModel(
+            noteDTOFindByTitleRequest.title,
+            findUserModelByUserIdResponse.get()
+        );
+
+        if (findNotesByTitleResponse.isEmpty()) {
+            throw new BadRequestException("Error: nenhuma nota encontrada com este título");
+        }
+
+        List<NoteDTOFindByTitleResponse> noteDTOFindByTitleResponseList = new ArrayList<NoteDTOFindByTitleResponse>();
+
+        for (NoteModel noteModel : findNotesByTitleResponse) {
+            NoteDTOFindByTitleResponse noteDTOFindByTitleResponse = new NoteDTOFindByTitleResponse(
+                noteModel.title,
+                noteModel.content
+            );
+
+            noteDTOFindByTitleResponseList.add(noteDTOFindByTitleResponse);
+        }
+
+        return noteDTOFindByTitleResponseList;
     }
 }
