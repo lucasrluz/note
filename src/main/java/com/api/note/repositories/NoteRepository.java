@@ -11,6 +11,5 @@ import com.api.note.models.UserModel;
 
 @Repository
 public interface NoteRepository extends JpaRepository<NoteModel, UUID> {
-    public boolean existsByTitle(String title);
     public List<NoteModel> findByTitleAndUserModel(String title, UserModel userModel);
 }
