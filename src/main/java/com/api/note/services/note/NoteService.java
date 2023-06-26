@@ -11,6 +11,8 @@ import com.api.note.domains.note.NoteDomain;
 import com.api.note.domains.note.exceptions.InvalidNoteDomainException;
 import com.api.note.dtos.note.NoteDTOFindByTitleRequest;
 import com.api.note.dtos.note.NoteDTOFindByTitleResponse;
+import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
+import com.api.note.dtos.note.NoteDTOFindByUserIdResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
 import com.api.note.models.NoteModel;
@@ -55,6 +57,37 @@ public class NoteService {
             saveNoteModelResponse.noteId.toString(),
             saveNoteModelResponse.title
         );
+    }
+
+    public List<NoteDTOFindByUserIdResponse> findByUserId(NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest) throws BadRequestException {
+        Optional<UserModel> findUserModelByUserIdResponse = this.userRepository.findById(
+            UUID.fromString(noteDTOFindByUserIdRequest.userId)
+        );
+
+        if (findUserModelByUserIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: usuário não encontrado");
+        }
+
+        List<NoteModel> findNotesByUserIdResponse = this.noteRepository.findByUserModel(
+            findUserModelByUserIdResponse.get()
+        );
+
+        if (findNotesByUserIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: Este usuário não possui notas criadas");
+        }
+
+        List<NoteDTOFindByUserIdResponse> noteDTOFindByUserIdResponseList = new ArrayList<NoteDTOFindByUserIdResponse>();
+
+        for (NoteModel noteModel : findNotesByUserIdResponse) {
+            NoteDTOFindByUserIdResponse noteDTOFindByTitleResponse = new NoteDTOFindByUserIdResponse(
+                noteModel.title,
+                noteModel.content
+            );
+
+            noteDTOFindByUserIdResponseList.add(noteDTOFindByTitleResponse);
+        }
+
+        return noteDTOFindByUserIdResponseList;
     }
 
     public List<NoteDTOFindByTitleResponse> findByTitle(NoteDTOFindByTitleRequest noteDTOFindByTitleRequest) throws BadRequestException {
