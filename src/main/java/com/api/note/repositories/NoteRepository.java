@@ -12,4 +12,5 @@ import com.api.note.models.UserModel;
 @Repository
 public interface NoteRepository extends JpaRepository<NoteModel, UUID> {
     public List<NoteModel> findByTitleAndUserModel(String title, UserModel userModel);
+    public List<NoteModel> findByUserModel(UserModel userModel);
 }
