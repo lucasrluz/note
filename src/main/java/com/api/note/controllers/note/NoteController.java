@@ -44,7 +44,7 @@ public class NoteController {
         }
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/title/{userId}")
     public ResponseEntity<Object> findByTitle(@RequestBody NoteDTOFindByTitleRequest noteDTOFindByTitleRequest, @PathVariable String userId) {
         try {
             noteDTOFindByTitleRequest.userId = userId;
