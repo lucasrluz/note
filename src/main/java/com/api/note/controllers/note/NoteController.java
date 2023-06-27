@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.note.dtos.note.NoteDTOFindByTitleRequest;
 import com.api.note.dtos.note.NoteDTOFindByTitleResponse;
+import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
+import com.api.note.dtos.note.NoteDTOFindByUserIdResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
 import com.api.note.services.note.NoteService;
@@ -41,6 +43,21 @@ public class NoteController {
             }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> findByUserId(@PathVariable String userId) {
+        try {
+            NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest = new NoteDTOFindByUserIdRequest(userId);
+
+            List<NoteDTOFindByUserIdResponse> noteDTOFindByUserIdResponse = this.noteService.findByUserId(noteDTOFindByUserIdRequest);
+
+            return ResponseEntity.status(HttpStatus.OK).body(noteDTOFindByUserIdResponse);
+        } catch (Exception exception) {
+            String message = exception.getMessage();
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
     }
 
