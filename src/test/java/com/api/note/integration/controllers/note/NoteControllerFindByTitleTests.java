@@ -60,7 +60,7 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note/title/" + saveUserModelResponse.userId.toString();
 
         this.mockMvc.perform(
             get(url)
@@ -78,7 +78,7 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String url = "/note/" + UUID.randomUUID().toString();
+        String url = "/note/title/" + UUID.randomUUID().toString();
 
         this.mockMvc.perform(
             get(url)
@@ -110,7 +110,7 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String url = "/note/" + saveUserModelForGetUserIdResponse.userId.toString();
+        String url = "/note/title/" + saveUserModelForGetUserIdResponse.userId.toString();
 
         this.mockMvc.perform(
             get(url)
