@@ -15,6 +15,8 @@ import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
 import com.api.note.dtos.note.NoteDTOFindByUserIdResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
+import com.api.note.dtos.note.NoteDTOUpdateRequest;
+import com.api.note.dtos.note.NoteDTOUpdateResponse;
 import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.NoteRepository;
@@ -120,5 +122,44 @@ public class NoteService {
         }
 
         return noteDTOFindByTitleResponseList;
+    }
+
+    public NoteDTOUpdateResponse update(NoteDTOUpdateRequest noteDTOUpdateRequest) throws InvalidNoteDomainException, BadRequestException {
+        NoteDomain noteDomain = NoteDomain.validate(
+            noteDTOUpdateRequest.title,
+            noteDTOUpdateRequest.content
+        );
+
+        Optional<UserModel> findUserModelByUserIdResponse = this.userRepository.findById(
+            UUID.fromString(noteDTOUpdateRequest.userId)
+        );
+
+        if (findUserModelByUserIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: usuário não encontrado");
+        }
+
+        Optional<NoteModel> findNoteModelByNoteIdResponse = this.noteRepository.findById(
+            UUID.fromString(noteDTOUpdateRequest.noteId)
+        );
+
+        if (findNoteModelByNoteIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: nota não encontrada");
+        }
+
+        NoteModel noteModel = new NoteModel(
+            noteDomain.getTitle(),
+            noteDomain.getContent(),
+            findUserModelByUserIdResponse.get()
+        );
+
+        noteModel.noteId = UUID.fromString(noteDTOUpdateRequest.noteId);
+        
+        NoteModel saveNoteModelResponse = this.noteRepository.save(noteModel);
+
+        return new NoteDTOUpdateResponse(
+            saveNoteModelResponse.noteId.toString(),
+            saveNoteModelResponse.title,
+            saveNoteModelResponse.content
+        );
     }
 }
