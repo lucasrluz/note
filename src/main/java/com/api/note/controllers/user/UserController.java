@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.note.dtos.user.UserDTOSaveDemoResponse;
 import com.api.note.dtos.user.UserDTOSaveRequest;
 import com.api.note.dtos.user.UserDTOSaveResponse;
 import com.api.note.services.user.UserService;
@@ -29,5 +30,12 @@ public class UserController {
         } catch (Exception exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
+    }
+
+    @PostMapping("/demo")
+    public ResponseEntity<Object> saveDemo() {
+        UserDTOSaveDemoResponse userDTOSaveDemoResponse = this.userService.saveDemo();
+
+        return ResponseEntity.status(HttpStatus.OK).body(userDTOSaveDemoResponse);
     }
 }
