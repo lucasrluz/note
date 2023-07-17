@@ -1,6 +1,5 @@
 package com.api.note.services.user;
 
-import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
