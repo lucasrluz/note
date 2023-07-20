@@ -2,9 +2,13 @@ package com.api.note.utils.builders.user;
 
 import com.api.note.models.UserModel;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 public class UserModelBuilder {
     public static UserModel createWithValidData() {
-        UserModel userModel = new UserModel("Foo Bar", "foobar@gmail.com", "123");
+        String hashPassword = BCrypt.withDefaults().hashToString(12, "123".toCharArray());
+        
+        UserModel userModel = new UserModel("Foo Bar", "foobar@gmail.com", hashPassword);
 
         return userModel;
     }
