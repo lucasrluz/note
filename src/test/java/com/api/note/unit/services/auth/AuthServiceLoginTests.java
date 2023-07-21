@@ -10,8 +10,9 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.api.note.dtos.login.LoginDTORequest;
-import com.api.note.dtos.login.LoginDTOResponse;
+
+import com.api.note.dtos.auth.LoginDTORequest;
+import com.api.note.dtos.auth.LoginDTOResponse;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.UserRepository;
 import com.api.note.services.auth.JwtService;

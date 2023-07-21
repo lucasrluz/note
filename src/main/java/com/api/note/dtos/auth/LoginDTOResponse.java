@@ -1,4 +1,4 @@
-package com.api.note.dtos.login;
+package com.api.note.dtos.auth;
 
 public class LoginDTOResponse {
     public String jwt;

@@ -3,8 +3,9 @@ package com.api.note.services.auth;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.api.note.dtos.login.LoginDTORequest;
-import com.api.note.dtos.login.LoginDTOResponse;
+
+import com.api.note.dtos.auth.LoginDTORequest;
+import com.api.note.dtos.auth.LoginDTOResponse;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.UserRepository;
 import com.api.note.services.util.BadRequestException;
@@ -41,4 +42,8 @@ public class AuthService {
 
         return new LoginDTOResponse(jwt);
     }
+
+    // public AuthenticateDTORequest authenticate(AuthenticateDTOResponse authenticateDTOResponse) {
+        
+    // }
 }

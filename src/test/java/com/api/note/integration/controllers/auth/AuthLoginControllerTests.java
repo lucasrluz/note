@@ -8,7 +8,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import org.assertj.core.api.Assertions;
-import com.api.note.dtos.login.LoginDTORequest;
+
+import com.api.note.dtos.auth.LoginDTORequest;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.UserRepository;
 import com.api.note.services.auth.JwtService;
