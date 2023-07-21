@@ -1,9 +1,12 @@
 package com.api.note.services.auth;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.api.note.dtos.auth.AuthenticateDTORequest;
 import com.api.note.dtos.auth.LoginDTORequest;
 import com.api.note.dtos.auth.LoginDTOResponse;
 import com.api.note.models.UserModel;
@@ -43,7 +46,15 @@ public class AuthService {
         return new LoginDTOResponse(jwt);
     }
 
-    // public AuthenticateDTORequest authenticate(AuthenticateDTOResponse authenticateDTOResponse) {
-        
-    // }
+    public boolean authenticate(AuthenticateDTORequest authenticateDTORequest) throws BadRequestException {
+        Optional<UserModel> findUserByUserIdResponse = this.userRepository.findById(
+            UUID.fromString(authenticateDTORequest.userId)
+        );
+    
+        if (findUserByUserIdResponse.isEmpty()) {
+            throw new BadRequestException("Error: usuário não encontrado");
+        }
+
+        return this.jwtService.validateJwt(authenticateDTORequest.jwt, findUserByUserIdResponse.get().email);
+    }
 }
