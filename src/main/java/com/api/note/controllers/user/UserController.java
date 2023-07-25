@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.note.dtos.user.UserDTOSaveDemoResponse;
 import com.api.note.dtos.user.UserDTOSaveRequest;
 import com.api.note.dtos.user.UserDTOSaveResponse;
+import com.api.note.interceptor.AllowAnnonymous;
 import com.api.note.services.user.UserService;
 
 @RestController
@@ -21,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @AllowAnnonymous
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody UserDTOSaveRequest userDTOSaveRequest) {
         try {
@@ -32,6 +34,7 @@ public class UserController {
         }
     }
 
+    @AllowAnnonymous
     @PostMapping("/demo")
     public ResponseEntity<Object> saveDemo() {
         UserDTOSaveDemoResponse userDTOSaveDemoResponse = this.userService.saveDemo();
