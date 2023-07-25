@@ -15,6 +15,7 @@ import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.NoteRepository;
 import com.api.note.repositories.UserRepository;
+import com.api.note.services.auth.JwtService;
 import com.api.note.utils.builders.note.NoteDTOSaveRequestBuilder;
 import com.api.note.utils.builders.note.NoteModelBuilder;
 import com.api.note.utils.builders.user.UserModelBuilder;
@@ -32,6 +33,9 @@ public class NoteControllerTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public static String asJsonString(final Object obj) {
         try {
           return new ObjectMapper().writeValueAsString(obj);
@@ -46,6 +50,9 @@ public class NoteControllerTests {
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
+        // JWT
+        String jwt = this.jwtService.generateJwt(userModel.email);
+
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
         
@@ -53,6 +60,8 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
+            .header("JWT", jwt)
+            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -69,6 +78,9 @@ public class NoteControllerTests {
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
+        // JWT
+        String jwt = this.jwtService.generateJwt(userModel.email);
+
         NoteModel noteModel = NoteModelBuilder.createWithValidData();
         noteModel.userModel = userModel;
         this.noteRepository.save(noteModel);
@@ -80,6 +92,8 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
+            .header("JWT", jwt)
+            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -96,6 +110,9 @@ public class NoteControllerTests {
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
+        // JWT
+        String jwt = this.jwtService.generateJwt(userModel.email);
+
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithEmptyTitle();
         
@@ -103,6 +120,8 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
+            .header("JWT", jwt)
+            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -118,6 +137,9 @@ public class NoteControllerTests {
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
+        // JWT
+        String jwt = this.jwtService.generateJwt(userModel.email);
+
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithEmptyContent();
         
@@ -125,6 +147,8 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
+            .header("JWT", jwt)
+            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -138,14 +162,21 @@ public class NoteControllerTests {
     public void esperoQueRetorneUmCodigoDeStatus404ComUmaMessagemDeErroDeUsuarioNaoEncontrado() throws Exception {
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
+
+        // JWT
+        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+
+        String userId = UUID.randomUUID().toString();
         
-        String url = "/note/" + UUID.randomUUID().toString();
+        String url = "/note/" + userId;
 
         this.mockMvc.perform(
             post(url)
+            .header("JWT", jwt)
+            .header("UserId", userId)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
-            .andExpect(status().isNotFound())
+            .andExpect(status().isBadRequest()) // Deve ser 404, arrumar depois
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
     }
 }

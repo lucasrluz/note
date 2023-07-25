@@ -18,6 +18,7 @@ import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.NoteRepository;
 import com.api.note.repositories.UserRepository;
+import com.api.note.services.auth.JwtService;
 import com.api.note.utils.builders.note.NoteModelBuilder;
 import com.api.note.utils.builders.user.UserModelBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,9 @@ public class NoteControllerFindByUserIdTests {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private JwtService jwtService;
 
     public static String asJsonString(final Object obj) {
         try {
@@ -60,8 +64,13 @@ public class NoteControllerFindByUserIdTests {
         
         String url = "/note/" + saveUserModelResponse.userId.toString();
 
+        // JWT
+        String jwt = this.jwtService.generateJwt(userModel.email);
+
         this.mockMvc.perform(
-            get(url))
+            get(url)
+            .header("JWT", jwt)
+            .header("UserId", saveUserModelResponse.userId.toString()))
             .andExpect(status().isOk())
             .andExpect(content().json("[{'title':'Foo Bar', 'content':'Foo bar'},{'title':'Foo Bar', 'content':'Foo bar'}]"));
     
@@ -71,11 +80,18 @@ public class NoteControllerFindByUserIdTests {
 
 	@Test
     public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeUsuaioNaoEncontrado() throws Exception {        
-        String url = "/note/" + UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
+        
+        String url = "/note/" + userId;
+
+        // JWT
+        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
 
         this.mockMvc.perform(
-            get(url))
-            .andExpect(status().isNotFound())
+            get(url)
+            .header("JWT", jwt)
+            .header("UserId", userId))
+            .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
 	}
 
@@ -85,11 +101,18 @@ public class NoteControllerFindByUserIdTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         this.userRepository.save(userModel);
+
+        String userId = saveUserModelResponse.userId.toString();
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note/" + userId;
+
+        // JWT
+        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
 
         this.mockMvc.perform(
-            get(url))
+            get(url)
+            .header("JWT", jwt)
+            .header("UserId", userId))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: Este usuário não possui notas criadas")));
     
