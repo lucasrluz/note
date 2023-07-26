@@ -51,17 +51,16 @@ public class NoteControllerTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModel.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note";
 
         this.mockMvc.perform(
             post(url)
             .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -79,7 +78,7 @@ public class NoteControllerTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModel.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         NoteModel noteModel = NoteModelBuilder.createWithValidData();
         noteModel.userModel = userModel;
@@ -88,12 +87,11 @@ public class NoteControllerTests {
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note";
 
         this.mockMvc.perform(
             post(url)
             .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -111,17 +109,16 @@ public class NoteControllerTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModel.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithEmptyTitle();
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note";
 
         this.mockMvc.perform(
             post(url)
             .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -138,17 +135,16 @@ public class NoteControllerTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModel.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         // Teste principal
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithEmptyContent();
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note";
 
         this.mockMvc.perform(
             post(url)
             .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -164,19 +160,16 @@ public class NoteControllerTests {
         NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
 
         // JWT
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
-
-        String userId = UUID.randomUUID().toString();
+        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
         
-        String url = "/note/" + userId;
+        String url = "/note";
 
         this.mockMvc.perform(
             post(url)
             .header("JWT", jwt)
-            .header("UserId", userId)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
-            .andExpect(status().isBadRequest()) // Deve ser 404, arrumar depois
+            .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
     }
 }

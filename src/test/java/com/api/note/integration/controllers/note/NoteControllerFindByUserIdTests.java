@@ -62,15 +62,14 @@ public class NoteControllerFindByUserIdTests {
         this.noteRepository.save(firstNoteModel);
         this.noteRepository.save(secondNoteModel);
         
-        String url = "/note/" + saveUserModelResponse.userId.toString();
+        String url = "/note";
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModel.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString()))
+            .header("JWT", jwt))
             .andExpect(status().isOk())
             .andExpect(content().json("[{'title':'Foo Bar', 'content':'Foo bar'},{'title':'Foo Bar', 'content':'Foo bar'}]"));
     
@@ -80,18 +79,15 @@ public class NoteControllerFindByUserIdTests {
 
 	@Test
     public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeUsuaioNaoEncontrado() throws Exception {        
-        String userId = UUID.randomUUID().toString();
-        
-        String url = "/note/" + userId;
+        String url = "/note";
 
         // JWT
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt)
-            .header("UserId", userId))
-            .andExpect(status().isBadRequest())
+            .header("JWT", jwt))
+            .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
 	}
 
@@ -101,18 +97,15 @@ public class NoteControllerFindByUserIdTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         this.userRepository.save(userModel);
-
-        String userId = saveUserModelResponse.userId.toString();
         
-        String url = "/note/" + userId;
+        String url = "/note";
 
         // JWT
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt)
-            .header("UserId", userId))
+            .header("JWT", jwt))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: Este usuário não possui notas criadas")));
     

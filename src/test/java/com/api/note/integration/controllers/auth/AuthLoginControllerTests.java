@@ -41,7 +41,7 @@ public class AuthLoginControllerTests {
     @Test
     public void esperoQueRetorneUmJwtValido() throws Exception {        
         UserModel userModel = UserModelBuilder.createWithValidData();
-        this.userRepository.save(userModel);
+        UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         LoginDTORequest loginDTORequest = LoginDTORequestBuilder.createWithValidData();
 
@@ -53,7 +53,7 @@ public class AuthLoginControllerTests {
 
         String jwt = new JSONObject(mvcResult.getResponse().getContentAsString()).getString("jwt");
 
-        Assertions.assertThat(this.jwtService.validateJwt(jwt, userModel.email)).isEqualTo(true);    
+        Assertions.assertThat(this.jwtService.validateJwt(jwt)).isEqualTo(saveUserModelResponse.userId.toString());    
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(201);
 
         this.userRepository.deleteAll();

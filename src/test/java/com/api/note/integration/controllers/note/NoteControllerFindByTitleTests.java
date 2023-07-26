@@ -64,15 +64,14 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String url = "/note/title/" + saveUserModelResponse.userId.toString();
+        String url = "/note/title";
 
         // JWT
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         this.mockMvc.perform(
             get(url)
             .header("JWT", jwt)
-            .header("UserId", saveUserModelResponse.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOFindByTitleRequest)))
             .andExpect(status().isOk())
@@ -87,20 +86,17 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String userId = UUID.randomUUID().toString(); 
-
-        String url = "/note/title/" + userId;
+        String url = "/note/title";
 
         // JWT
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
 
         this.mockMvc.perform(
             get(url)
             .header("JWT", jwt)
-            .header("UserId", userId)
             .contentType("application/json")
             .content(asJsonString(noteDTOFindByTitleRequest)))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
     }
 
@@ -126,15 +122,14 @@ public class NoteControllerFindByTitleTests {
         // Teste principal
         NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
 
-        String url = "/note/title/" + saveUserModelForGetUserIdResponse.userId.toString();
+        String url = "/note/title";
 
         // JWT
-        String jwt = this.jwtService.generateJwt(userModelForGetUserId.email);
+        String jwt = this.jwtService.generateJwt(saveUserModelForGetUserIdResponse.userId.toString());
 
         this.mockMvc.perform(
             get(url)
             .header("JWT", jwt)
-            .header("UserId", userModelForGetUserId.userId.toString())
             .contentType("application/json")
             .content(asJsonString(noteDTOFindByTitleRequest)))
             .andExpect(status().isNotFound())
