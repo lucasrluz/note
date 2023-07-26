@@ -1,6 +1,7 @@
 package com.api.note.unit.services.auth;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ public class AuthServiceLoginTests {
     @Test
     public void esperoQueRetorneUmJwt() throws BadRequestException {
         UserModel userModelMock = UserModelBuilder.createWithValidData();
+        userModelMock.userId = UUID.randomUUID();
         Optional<UserModel> userModelOptionalMock = Optional.of(userModelMock);
         BDDMockito.when(this.userRepository.findByEmail(ArgumentMatchers.any())).thenReturn(userModelOptionalMock);
 
