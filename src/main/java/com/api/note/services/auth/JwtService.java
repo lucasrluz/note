@@ -25,13 +25,17 @@ public class JwtService {
             .compact();
     }
     
-    public boolean validateJwt(String jwt, String email) {
+    public String validateJwt(String jwt) {
         Jwts.parserBuilder()
             .setSigningKey(this.jwtKeys.getSecretKey())
-            .requireSubject(email)
             .build()
             .parseClaimsJws(jwt);
-        
-        return true;
+
+        return Jwts.parserBuilder()
+            .setSigningKey(this.jwtKeys.getSecretKey())
+            .build()
+            .parseClaimsJws(jwt)
+            .getBody()
+            .getSubject();
     }
 }
