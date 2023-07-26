@@ -1,5 +1,7 @@
 package com.api.note.unit.services.auth;
 
+import java.util.UUID;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +13,6 @@ import com.api.note.services.auth.JwtService;
 import com.api.note.services.auth.util.JwtKeys;
 import com.api.note.services.util.BadRequestException;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.IncorrectClaimException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -33,9 +34,11 @@ public class JwtServiceTests {
             Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secretKey))
         );
 
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String userId = UUID.randomUUID().toString();
 
-        Assertions.assertThat(this.jwtService.validateJwt(jwt, "foobar@gmail.com")).isEqualTo(true);
+        String jwt = this.jwtService.generateJwt(userId);
+
+        Assertions.assertThat(this.jwtService.validateJwt(jwt)).isEqualTo(userId);
     }
 
     @Test
@@ -46,23 +49,11 @@ public class JwtServiceTests {
             Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secretKey))
         );
 
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
+        String userId = UUID.randomUUID().toString();
+
+        String jwt = this.jwtService.generateJwt(userId);
 
         Assertions.assertThatExceptionOfType(ExpiredJwtException.class)
-            .isThrownBy(() -> this.jwtService.validateJwt(jwt, "foobar@gmail.com"));
-    }
-
-    @Test
-    public void esperoQueRetorneUmErroDeSubjectIncorreto() {
-        BDDMockito.when(this.jwtKeys.getJwtExpirationMs()).thenReturn(5000);
-        
-        BDDMockito.when(this.jwtKeys.getSecretKey()).thenReturn(
-            Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secretKey))
-        );
-
-        String jwt = this.jwtService.generateJwt("foobar@gmail.com");
-
-        Assertions.assertThatExceptionOfType(IncorrectClaimException.class)
-            .isThrownBy(() -> this.jwtService.validateJwt(jwt, "foo@gmail.com"));
+            .isThrownBy(() -> this.jwtService.validateJwt(jwt));
     }
 }
