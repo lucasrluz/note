@@ -15,10 +15,10 @@ public class JwtService {
         this.jwtKeys = jwtKeys;
     }
 
-    public String generateJwt(String email) {
+    public String generateJwt(String userId) {
         return Jwts
             .builder()
-            .setSubject(email)
+            .setSubject(userId)
             .setIssuedAt(new Date())
             .setExpiration(new Date(new Date().getTime() + this.jwtKeys.getJwtExpirationMs()))
             .signWith(this.jwtKeys.getSecretKey(), SignatureAlgorithm.HS256)
