@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +16,7 @@ import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
 import com.api.note.dtos.note.NoteDTOFindByUserIdResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
+import com.api.note.services.auth.AuthService;
 import com.api.note.services.note.NoteService;
 
 @RestController
@@ -23,13 +24,18 @@ import com.api.note.services.note.NoteService;
 public class NoteController {
     private NoteService noteService;
 
-    public NoteController(NoteService noteService) {
+    private AuthService authService;
+
+    public NoteController(NoteService noteService, AuthService authService) {
         this.noteService = noteService;
+        this.authService = authService;
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<Object> save(@RequestBody NoteDTOSaveRequest noteDTOSaveRequest, @PathVariable String userId) {
+    @PostMapping
+    public ResponseEntity<Object> save(@RequestBody NoteDTOSaveRequest noteDTOSaveRequest, @RequestHeader("JWT") String jwt) {
         try {
+            String userId = this.authService.authenticate(jwt);
+
             noteDTOSaveRequest.userId = userId;
 
             NoteDTOSaveResponse noteDTOSaveResponse = this.noteService.save(noteDTOSaveRequest);
@@ -46,9 +52,11 @@ public class NoteController {
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Object> findByUserId(@PathVariable String userId) {
+    @GetMapping
+    public ResponseEntity<Object> findByUserId(@RequestHeader("JWT") String jwt) {
         try {
+            String userId = this.authService.authenticate(jwt);
+
             NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest = new NoteDTOFindByUserIdRequest(userId);
 
             List<NoteDTOFindByUserIdResponse> noteDTOFindByUserIdResponse = this.noteService.findByUserId(noteDTOFindByUserIdRequest);
@@ -61,9 +69,11 @@ public class NoteController {
         }
     }
 
-    @GetMapping("/title/{userId}")
-    public ResponseEntity<Object> findByTitle(@RequestBody NoteDTOFindByTitleRequest noteDTOFindByTitleRequest, @PathVariable String userId) {
+    @GetMapping("/title")
+    public ResponseEntity<Object> findByTitle(@RequestBody NoteDTOFindByTitleRequest noteDTOFindByTitleRequest, @RequestHeader("JWT") String jwt) {
         try {
+            String userId = this.authService.authenticate(jwt);
+
             noteDTOFindByTitleRequest.userId = userId;
 
             List<NoteDTOFindByTitleResponse> noteDTOFindByTitleResponse = this.noteService.findByTitle(noteDTOFindByTitleRequest);

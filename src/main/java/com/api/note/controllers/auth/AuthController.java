@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.note.dtos.auth.LoginDTORequest;
 import com.api.note.dtos.auth.LoginDTOResponse;
-import com.api.note.interceptor.AllowAnnonymous;
 import com.api.note.services.auth.AuthService;
 
 @RestController
@@ -21,7 +20,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @AllowAnnonymous
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginDTORequest loginDTORequest) {
         try {
