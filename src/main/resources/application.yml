@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_HOSTNAME}:${POSTGRESQL_PORT}/${POSTGRESQL_DB_NAME}
+    username:
+      ${DB_USERNAME}
+    password:
+      ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto:
+        none
+
+app:
+  secretKey: ${SECRET_KEY}
+  jwtExpirationMs: ${JWT_EXPIRATIONMS}
