@@ -2,6 +2,7 @@ package com.api.note.controllers.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import com.api.note.dtos.user.UserDTOSaveRequest;
 import com.api.note.dtos.user.UserDTOSaveResponse;
 import com.api.note.services.user.UserService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
