@@ -74,10 +74,6 @@ public class NoteService {
             findUserModelByUserIdResponse.get()
         );
 
-        if (findNotesByUserIdResponse.isEmpty()) {
-            throw new BadRequestException("Error: Este usuário não possui notas criadas");
-        }
-
         List<NoteDTOFindByUserIdResponse> noteDTOFindByUserIdResponseList = new ArrayList<NoteDTOFindByUserIdResponse>();
 
         for (NoteModel noteModel : findNotesByUserIdResponse) {
