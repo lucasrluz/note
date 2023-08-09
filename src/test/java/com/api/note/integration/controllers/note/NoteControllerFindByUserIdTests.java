@@ -92,7 +92,7 @@ public class NoteControllerFindByUserIdTests {
 	}
 
 	@Test
-    public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeNotasNaoEncontradas() throws Exception {
+    public void esperoQueRetorneUmCodigoDeStatus200ComUmaListaVazia() throws Exception {
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
@@ -106,8 +106,8 @@ public class NoteControllerFindByUserIdTests {
         this.mockMvc.perform(
             get(url)
             .header("JWT", jwt))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$", is("Error: Este usuário não possui notas criadas")));
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
     
 		this.userRepository.deleteAll();
 	}

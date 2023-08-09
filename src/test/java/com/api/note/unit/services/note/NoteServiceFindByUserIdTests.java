@@ -95,9 +95,9 @@ public class NoteServiceFindByUserIdTests {
 
         // Teste principal
         NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest = NoteDTOFindByUserIdRequestBuilder.createWithValidData();
-
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.findByUserId(noteDTOFindByUserIdRequest))
-            .withMessage("Error: Este usuário não possui notas criadas");
+        
+        List<NoteDTOFindByUserIdResponse> findByUserIdResponse = this.noteService.findByUserId(noteDTOFindByUserIdRequest);
+        
+        Assertions.assertThat(findByUserIdResponse.isEmpty()).isEqualTo(true);
     }
 }
