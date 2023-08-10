@@ -78,6 +78,7 @@ public class NoteService {
 
         for (NoteModel noteModel : findNotesByUserIdResponse) {
             NoteDTOFindByUserIdResponse noteDTOFindByTitleResponse = new NoteDTOFindByUserIdResponse(
+                noteModel.noteId.toString(),
                 noteModel.title,
                 noteModel.content
             );
