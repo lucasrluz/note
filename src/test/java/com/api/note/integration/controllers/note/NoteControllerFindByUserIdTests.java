@@ -59,19 +59,23 @@ public class NoteControllerFindByUserIdTests {
         NoteModel secondNoteModel = NoteModelBuilder.createWithValidData();
         secondNoteModel.userModel = userModel;
 
-        this.noteRepository.save(firstNoteModel);
-        this.noteRepository.save(secondNoteModel);
+        NoteModel firstNoteModelSaveResponse = this.noteRepository.save(firstNoteModel);
+        NoteModel secondNoteModelSaveResponse = this.noteRepository.save(secondNoteModel);
         
         String url = "/note";
 
         // JWT
         String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
+        String jsonResponse = 
+            "[{'noteId':'" + firstNoteModelSaveResponse.noteId.toString() + "', 'title':'Foo Bar', 'content':'Foo bar'}," +
+            "{'noteId':'" + secondNoteModelSaveResponse.noteId.toString() + "', 'title':'Foo Bar', 'content':'Foo bar'}]";
+
         this.mockMvc.perform(
             get(url)
             .header("JWT", jwt))
             .andExpect(status().isOk())
-            .andExpect(content().json("[{'title':'Foo Bar', 'content':'Foo bar'},{'title':'Foo Bar', 'content':'Foo bar'}]"));
+            .andExpect(content().json(jsonResponse));
     
 		this.noteRepository.deleteAll();
 		this.userRepository.deleteAll();

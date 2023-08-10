@@ -3,6 +3,7 @@ package com.api.note.unit.services.note;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,9 +45,11 @@ public class NoteServiceFindByUserIdTests {
         BDDMockito.when(this.userRepository.findById(ArgumentMatchers.any())).thenReturn(userModelOptionalMock);
 
         NoteModel firstNoteModel = NoteModelBuilder.createWithValidData();
+        firstNoteModel.noteId = UUID.randomUUID();
         firstNoteModel.userModel = userModelMock;
 
         NoteModel secondNoteModel = NoteModelBuilder.createWithValidData();
+        secondNoteModel.noteId = UUID.randomUUID();
         secondNoteModel.userModel = userModelMock;
         secondNoteModel.content = "Bar foo";
 
@@ -62,9 +65,11 @@ public class NoteServiceFindByUserIdTests {
 
         List<NoteDTOFindByUserIdResponse> noteDTOFindByUserIdResponse = this.noteService.findByUserId(noteDTOFindByUserIdRequest);
 
+        Assertions.assertThat(noteDTOFindByUserIdResponse.get(0).noteId).isEqualTo(firstNoteModel.noteId.toString());
         Assertions.assertThat(noteDTOFindByUserIdResponse.get(0).title).isEqualTo(firstNoteModel.title);
         Assertions.assertThat(noteDTOFindByUserIdResponse.get(0).content).isEqualTo(firstNoteModel.content);
 
+        Assertions.assertThat(noteDTOFindByUserIdResponse.get(1).noteId).isEqualTo(secondNoteModel.noteId.toString());
         Assertions.assertThat(noteDTOFindByUserIdResponse.get(1).title).isEqualTo(secondNoteModel.title);
         Assertions.assertThat(noteDTOFindByUserIdResponse.get(1).content).isEqualTo(secondNoteModel.content);
     }
