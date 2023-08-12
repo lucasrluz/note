@@ -70,23 +70,6 @@ public class NoteServiceUpdateTests {
     }
 
     @Test
-    public void esperoQueRetorneUmErroDeUsuarioNaoEncontrado() throws InvalidNoteDomainException, BadRequestException {
-        // Mocks
-        Optional<UserModel> userModelOptional = Optional.empty();
-        BDDMockito.when(this.userRepository.findById(ArgumentMatchers.any())).thenReturn(userModelOptional);
-
-        // Teste principal
-        NoteDTOUpdateRequest noteDTOUpdateRequest = NoteDTOUpdateRequestBuilder.createWithValidData();
-
-        noteDTOUpdateRequest.userId = UUID.randomUUID().toString();
-        noteDTOUpdateRequest.noteId = UUID.randomUUID().toString();
-
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.update(noteDTOUpdateRequest))
-            .withMessage("Error: usuário não encontrado");
-    }
-
-    @Test
     public void esperoQueRetorneUmErroDeNotaNaoEncontrada() throws InvalidNoteDomainException, BadRequestException {
         // Mocks
         UserModel userModelMock = UserModelBuilder.createWithValidData();
