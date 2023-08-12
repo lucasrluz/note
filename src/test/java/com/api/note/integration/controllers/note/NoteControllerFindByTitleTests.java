@@ -49,6 +49,9 @@ public class NoteControllerFindByTitleTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus200ComOsDadosFornecidosNaBusca() throws Exception {
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+
         // Preparo de dados de ambiente
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
@@ -102,6 +105,9 @@ public class NoteControllerFindByTitleTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus404ComUmMensagemDeErroDeNotaNaoEncontradaPeloTituloFornecido() throws Exception {
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+        
         // Preparo de dados de ambiente
         UserModel userModelForGetUserId = UserModelBuilder.createWithValidData();
         userModelForGetUserId.name = "Bar Foo";

@@ -26,6 +26,9 @@ public class UserDemoControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus200ComOsDadosDosTresUsuariosDemo() throws Exception {
+        this.userRepository.deleteAll();
+        this.emailNumberRepository.deleteAll();
+        
         this.mockMvc.perform(
             post("/user/demo"))
             .andExpect(status().isOk())

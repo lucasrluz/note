@@ -35,6 +35,8 @@ public class UserControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus201ComOsDadosSalvosNoSistema() throws Exception {
+        this.userRepository.deleteAll();
+
         UserDTOSaveRequest userDTOSaveRequest = UserDTOSaveRequestBuilder.createWithValidData();
 
         this.mockMvc.perform(
@@ -102,6 +104,8 @@ public class UserControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus400ComUmaMessagemDeEmailJaCadastrado() throws Exception {
+        this.userRepository.deleteAll();
+        
         UserModel userModel = UserModelBuilder.createWithValidData();
         
         this.userRepository.save(userModel);

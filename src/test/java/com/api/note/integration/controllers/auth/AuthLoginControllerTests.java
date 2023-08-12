@@ -39,7 +39,9 @@ public class AuthLoginControllerTests {
     }
 
     @Test
-    public void esperoQueRetorneUmJwtValido() throws Exception {        
+    public void esperoQueRetorneUmJwtValido() throws Exception {
+        this.userRepository.deleteAll();
+
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
@@ -60,7 +62,9 @@ public class AuthLoginControllerTests {
     }
 
 	@Test
-    public void esperoQueRetorneUmErroDadoUmEmailInvalido() throws Exception {        
+    public void esperoQueRetorneUmErroDadoUmEmailInvalido() throws Exception {
+        this.userRepository.deleteAll();
+
         LoginDTORequest loginDTORequest = LoginDTORequestBuilder.createWithValidData();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -74,7 +78,9 @@ public class AuthLoginControllerTests {
     }
 
 	@Test
-    public void esperoQueRetorneUmErroDadoUmaSenhaInvalida() throws Exception {        
+    public void esperoQueRetorneUmErroDadoUmaSenhaInvalida() throws Exception {
+        this.userRepository.deleteAll();
+               
         UserModel userModel = UserModelBuilder.createWithValidData();
         this.userRepository.save(userModel);
 

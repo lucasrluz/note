@@ -48,6 +48,9 @@ public class NoteControllerFindByUserIdTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus201ComAsNotasDoUsuario() throws Exception {
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+        
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
@@ -97,6 +100,8 @@ public class NoteControllerFindByUserIdTests {
 
 	@Test
     public void esperoQueRetorneUmCodigoDeStatus200ComUmaListaVazia() throws Exception {
+        this.userRepository.deleteAll();
+        
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 

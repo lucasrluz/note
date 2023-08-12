@@ -46,6 +46,9 @@ public class NoteControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus201ComOsDadosSalvosNoSistema() throws Exception {
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+        
         // Preparo de dados de ambiente
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
@@ -73,6 +76,9 @@ public class NoteControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus201ComOsDadosSalvosNoSistemaDadoDuasNotasComOMesmoTitulo() throws Exception {
+        this.noteRepository.deleteAll();
+        this.userRepository.deleteAll();
+        
         // Preparo de dados de ambiente
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
@@ -104,6 +110,8 @@ public class NoteControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus400ComUmaMessagemDeErroDeTituloInvalidoDadoUmValorVazio() throws Exception {
+        this.userRepository.deleteAll();
+        
         // Preparo de dados de ambiente
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
@@ -130,6 +138,8 @@ public class NoteControllerTests {
 
     @Test
     public void esperoQueRetorneUmCodigoDeStatus400ComUmaMessagemDeErroDeConteudoInvalidoDadoUmValorVazio() throws Exception {
+        this.userRepository.deleteAll();
+        
         // Preparo de dados de ambiente
         UserModel userModel = UserModelBuilder.createWithValidData();
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
