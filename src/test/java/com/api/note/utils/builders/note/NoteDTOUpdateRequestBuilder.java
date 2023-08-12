@@ -13,4 +13,26 @@ public class NoteDTOUpdateRequestBuilder {
 
         return noteDTOUpdateRequest;
     }
+
+    public static NoteDTOUpdateRequest createWithEmptyTitle() {
+        NoteDTOUpdateRequest noteDTOUpdateRequest = new NoteDTOUpdateRequest(
+            null,
+            null,
+            "",
+            "Bar foo"
+        );
+
+        return noteDTOUpdateRequest;
+    }
+
+    public static NoteDTOUpdateRequest createWithEmptyContent() {
+        NoteDTOUpdateRequest noteDTOUpdateRequest = new NoteDTOUpdateRequest(
+            null,
+            null,
+            "Bar Foo",
+            ""
+        );
+
+        return noteDTOUpdateRequest;
+    }
 }
