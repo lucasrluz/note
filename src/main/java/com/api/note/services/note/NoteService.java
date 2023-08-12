@@ -131,10 +131,6 @@ public class NoteService {
             UUID.fromString(noteDTOUpdateRequest.userId)
         );
 
-        if (findUserModelByUserIdResponse.isEmpty()) {
-            throw new BadRequestException("Error: usuário não encontrado");
-        }
-
         Optional<NoteModel> findNoteModelByNoteIdResponse = this.noteRepository.findById(
             UUID.fromString(noteDTOUpdateRequest.noteId)
         );
