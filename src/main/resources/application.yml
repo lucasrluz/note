@@ -8,7 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto:
-        none
+        update
 
 app:
   secretKey: ${SECRET_KEY}
