@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
 import com.api.note.dtos.note.NoteDTOFindByUserIdResponse;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
+import com.api.note.dtos.note.NoteDTOUpdateRequest;
+import com.api.note.dtos.note.NoteDTOUpdateResponse;
 import com.api.note.services.auth.AuthService;
 import com.api.note.services.note.NoteService;
 
@@ -85,6 +88,25 @@ public class NoteController {
             String message = exception.getMessage();
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<Object> update(@RequestBody NoteDTOUpdateRequest noteDTOUpdateRequest, @RequestHeader("JWT") String jwt) {
+        try {
+            String userId = this.authService.authenticate(jwt);
+
+            noteDTOUpdateRequest.userId = userId;
+
+            NoteDTOUpdateResponse noteDTOUpdateResponse = this.noteService.update(noteDTOUpdateRequest);
+
+            return ResponseEntity.status(HttpStatus.OK).body(noteDTOUpdateResponse);
+        } catch (Exception exception) {
+            if (exception.getMessage().equals("Error: nota n\u00E3o encontrada")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
 }
