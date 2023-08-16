@@ -57,7 +57,8 @@ public class NoteService {
 
         return new NoteDTOSaveResponse(
             saveNoteModelResponse.noteId.toString(),
-            saveNoteModelResponse.title
+            saveNoteModelResponse.title,
+            saveNoteModelResponse.content
         );
     }
 
