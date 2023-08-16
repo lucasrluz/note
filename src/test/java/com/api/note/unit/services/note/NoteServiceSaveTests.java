@@ -56,6 +56,7 @@ public class NoteServiceSaveTests {
 
         Assertions.assertThat(noteDTOSaveResponse.noteId).isEqualTo(noteModelMock.noteId.toString());
         Assertions.assertThat(noteDTOSaveResponse.title).isEqualTo(noteModelMock.title);
+        Assertions.assertThat(noteDTOSaveResponse.content).isEqualTo(noteModelMock.content);
     }
 
     @Test

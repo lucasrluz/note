@@ -67,7 +67,8 @@ public class NoteControllerTests {
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("title", is("Foo Bar")));
+            .andExpect(jsonPath("title", is("Foo Bar")))
+            .andExpect(jsonPath("content", is("Foo bar")));
 
         // Limpeza de dados do ambiente
         this.noteRepository.deleteAll();
@@ -101,7 +102,8 @@ public class NoteControllerTests {
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("title", is("Foo Bar")));
+            .andExpect(jsonPath("title", is("Foo Bar")))
+            .andExpect(jsonPath("content", is("Foo bar")));
 
         // Limpeza de dados do ambiente
         this.noteRepository.deleteAll();
