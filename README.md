@@ -9,6 +9,8 @@ Este projeto é uma API construída usando **Java, Spring Boot, PostgresSQL, JWT
 
 A API foi desenvolvida para por em meu portifólio e mostrar os meus conhecimentos.
 
+Projeto Frontend em React que consome esta API: https://github.com/lucasrluz/note-frontend
+
 ## Seções
 
 - [Instalação](#instalação)
