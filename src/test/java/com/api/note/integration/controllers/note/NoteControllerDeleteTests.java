@@ -13,7 +13,6 @@ import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 
-import com.api.note.dtos.note.NoteDTODeleteRequest;
 import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
 import com.api.note.repositories.NoteRepository;
@@ -60,23 +59,18 @@ public class NoteControllerDeleteTests {
         NoteModel saveNoteModelResponse = this.noteRepository.save(noteModel);
 
         // Teste principal
-        NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(saveNoteModelResponse.noteId.toString(), "");
-
         // JWT
         String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
-            delete("/note")
+            delete("/note/" + saveNoteModelResponse.noteId.toString())
             .header("JWT", jwt)
-            .contentType("application/json")
-            .content(asJsonString(noteDTODeleteRequest))
         ).andReturn().getResponse();
 
-        
         Assertions.assertThat(httpServletResponse.getStatus()).isEqualTo(200);
         
         String noteId = new JSONObject(httpServletResponse.getContentAsString()).getString("noteId");
-        Assertions.assertThat(noteId).isEqualTo(noteDTODeleteRequest.noteId);
+        Assertions.assertThat(noteId).isEqualTo(saveNoteModelResponse.noteId.toString());
 
         this.noteRepository.deleteAll();
         this.userRepository.deleteAll();
@@ -96,16 +90,12 @@ public class NoteControllerDeleteTests {
         NoteModel saveNoteModelResponse = this.noteRepository.save(noteModel);
 
         // Teste principal
-        NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(saveNoteModelResponse.noteId.toString(), "");
-
         // JWT
         String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
 
         MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
-            delete("/note")
+            delete("/note/" + saveNoteModelResponse.noteId.toString())
             .header("JWT", jwt)
-            .contentType("application/json")
-            .content(asJsonString(noteDTODeleteRequest))
         ).andReturn().getResponse();
 
         
@@ -126,16 +116,12 @@ public class NoteControllerDeleteTests {
         UserModel saveUserModelResponse = this.userRepository.save(userModel);
 
         // Teste principal
-        NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(UUID.randomUUID().toString(), "");
-
         // JWT
         String jwt = this.jwtService.generateJwt(saveUserModelResponse.userId.toString());
 
         MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
-            delete("/note")
+            delete("/note/" + UUID.randomUUID().toString())
             .header("JWT", jwt)
-            .contentType("application/json")
-            .content(asJsonString(noteDTODeleteRequest))
         ).andReturn().getResponse();
 
         Assertions.assertThat(httpServletResponse.getStatus()).isEqualTo(404);
