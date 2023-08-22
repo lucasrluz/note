@@ -1,6 +1,7 @@
 package com.api.note.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ import com.api.note.models.UserModel;
 public interface NoteRepository extends JpaRepository<NoteModel, UUID> {
     public List<NoteModel> findByTitleAndUserModel(String title, UserModel userModel);
     public List<NoteModel> findByUserModel(UserModel userModel);
+    public Optional<NoteModel> findByNoteIdAndUserModel(UUID noteId, UserModel userModel);
 }
