@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.api.note.domains.note.NoteDomain;
 import com.api.note.domains.note.exceptions.InvalidNoteDomainException;
+import com.api.note.dtos.note.NoteDTODeleteRequest;
+import com.api.note.dtos.note.NoteDTODeleteResponse;
 import com.api.note.dtos.note.NoteDTOFindByTitleRequest;
 import com.api.note.dtos.note.NoteDTOFindByTitleResponse;
 import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
@@ -155,5 +157,30 @@ public class NoteService {
             saveNoteModelResponse.title,
             saveNoteModelResponse.content
         );
+    }
+
+    public NoteDTODeleteResponse delete(NoteDTODeleteRequest noteDTODeleteRequest) throws BadRequestException {
+        Optional<UserModel> findUserModelResponse = this.userRepository.findById(
+            UUID.fromString(noteDTODeleteRequest.userId)
+        );
+
+        if (findUserModelResponse.isEmpty()) {
+            throw new BadRequestException("Error: usuário não encontrado");
+        }
+
+        Optional<NoteModel> findNoteModelResponse = this.noteRepository.findByNoteIdAndUserModel(
+            UUID.fromString(noteDTODeleteRequest.noteId),
+            findUserModelResponse.get()
+        );
+
+        if (findNoteModelResponse.isEmpty()) {
+            throw new BadRequestException("Error: nota não encontrada");
+        }
+
+        this.noteRepository.deleteById(
+            findNoteModelResponse.get().noteId
+        );
+        
+        return new NoteDTODeleteResponse(findNoteModelResponse.get().noteId.toString());
     }
 }

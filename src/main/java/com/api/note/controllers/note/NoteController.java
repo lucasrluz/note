@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.note.dtos.note.NoteDTODeleteRequest;
+import com.api.note.dtos.note.NoteDTODeleteResponse;
 import com.api.note.dtos.note.NoteDTOFindByTitleRequest;
 import com.api.note.dtos.note.NoteDTOFindByTitleResponse;
 import com.api.note.dtos.note.NoteDTOFindByUserIdRequest;
@@ -107,6 +110,21 @@ public class NoteController {
             }
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Object> delete(@RequestBody NoteDTODeleteRequest noteDTODeleteRequest, @RequestHeader("JWT") String jwt) {
+        try {
+            String userId = this.authService.authenticate(jwt);
+
+            noteDTODeleteRequest.userId = userId;
+
+            NoteDTODeleteResponse noteDTODeleteResponse = this.noteService.delete(noteDTODeleteRequest);
+
+            return ResponseEntity.status(HttpStatus.OK).body(noteDTODeleteResponse);
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         }
     }
 }
