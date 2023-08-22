@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -113,12 +114,12 @@ public class NoteController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<Object> delete(@RequestBody NoteDTODeleteRequest noteDTODeleteRequest, @RequestHeader("JWT") String jwt) {
+    @DeleteMapping("/{noteId}")
+    public ResponseEntity<Object> delete(@PathVariable String noteId , @RequestHeader("JWT") String jwt) {
         try {
             String userId = this.authService.authenticate(jwt);
-
-            noteDTODeleteRequest.userId = userId;
+            
+            NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(noteId, userId);
 
             NoteDTODeleteResponse noteDTODeleteResponse = this.noteService.delete(noteDTODeleteRequest);
 
