@@ -8,11 +8,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.hamcrest.CoreMatchers.is;
 
 import com.api.note.models.NoteModel;
 import com.api.note.models.UserModel;
@@ -76,26 +73,12 @@ public class NoteControllerFindByUserIdTests {
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt))
+            .header("Authorization", "Bearer " + jwt))
             .andExpect(status().isOk())
             .andExpect(content().json(jsonResponse));
     
 		this.noteRepository.deleteAll();
 		this.userRepository.deleteAll();
-	}
-
-	@Test
-    public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeUsuaioNaoEncontrado() throws Exception {        
-        String url = "/note";
-
-        // JWT
-        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
-
-        this.mockMvc.perform(
-            get(url)
-            .header("JWT", jwt))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
 	}
 
 	@Test
@@ -114,7 +97,7 @@ public class NoteControllerFindByUserIdTests {
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt))
+            .header("Authorization", "Bearer " + jwt))
             .andExpect(status().isOk())
             .andExpect(content().json("[]"));
     

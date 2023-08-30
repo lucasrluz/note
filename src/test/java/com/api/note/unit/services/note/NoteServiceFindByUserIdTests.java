@@ -75,20 +75,6 @@ public class NoteServiceFindByUserIdTests {
     }
 
     @Test
-    public void esperoQueRetorneUmErroDeUsuarioNaoEncontrado() throws BadRequestException {
-        // Mocks
-        Optional<UserModel> userModelOptionalMock = Optional.empty();
-        BDDMockito.when(this.userRepository.findById(ArgumentMatchers.any())).thenReturn(userModelOptionalMock);
-
-        // Teste principal
-        NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest = NoteDTOFindByUserIdRequestBuilder.createWithValidData();
-
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.findByUserId(noteDTOFindByUserIdRequest))
-            .withMessage("Error: usuário não encontrado");
-    }
-
-    @Test
     public void esperoQueRetorneUmErroDeNenhumaNotaEncontrada() throws BadRequestException {
         // Mocks
         UserModel userModelMock = UserModelBuilder.createWithValidData();

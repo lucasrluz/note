@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.hamcrest.CoreMatchers.is;
@@ -74,7 +73,7 @@ public class NoteControllerFindByTitleTests {
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOFindByTitleRequest)))
             .andExpect(status().isOk())
@@ -82,25 +81,6 @@ public class NoteControllerFindByTitleTests {
 
         this.noteRepository.deleteAll();
         this.userRepository.deleteAll();
-    }
-
-    @Test
-    public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeErroDeUsuarioNaoEncontrado() throws Exception {
-        // Teste principal
-        NoteDTOFindByTitleRequest noteDTOFindByTitleRequest = NoteDTOFindByTitleRequestBuilder.createWithValidData();
-
-        String url = "/note/title";
-
-        // JWT
-        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
-
-        this.mockMvc.perform(
-            get(url)
-            .header("JWT", jwt)
-            .contentType("application/json")
-            .content(asJsonString(noteDTOFindByTitleRequest)))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
     }
 
     @Test
@@ -135,7 +115,7 @@ public class NoteControllerFindByTitleTests {
 
         this.mockMvc.perform(
             get(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOFindByTitleRequest)))
             .andExpect(status().isNotFound())

@@ -64,43 +64,13 @@ public class NoteControllerDeleteTests {
 
         MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
             delete("/note/" + saveNoteModelResponse.noteId.toString())
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
         ).andReturn().getResponse();
 
         Assertions.assertThat(httpServletResponse.getStatus()).isEqualTo(200);
         
         String noteId = new JSONObject(httpServletResponse.getContentAsString()).getString("noteId");
         Assertions.assertThat(noteId).isEqualTo(saveNoteModelResponse.noteId.toString());
-
-        this.noteRepository.deleteAll();
-        this.userRepository.deleteAll();
-    }
-
-	@Test
-    public void esperoQueRetorneUmCodigoDeStatus404ComUmaMensagemDeErroDeUsuarioNaoEncontrado() throws Exception {
-        this.noteRepository.deleteAll();
-        this.userRepository.deleteAll();
-
-        // Preparo de dados de ambiente
-        UserModel userModel = UserModelBuilder.createWithValidData();
-        this.userRepository.save(userModel);
-
-        NoteModel noteModel = NoteModelBuilder.createWithValidData();
-        noteModel.userModel = userModel;
-        NoteModel saveNoteModelResponse = this.noteRepository.save(noteModel);
-
-        // Teste principal
-        // JWT
-        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
-
-        MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
-            delete("/note/" + saveNoteModelResponse.noteId.toString())
-            .header("JWT", jwt)
-        ).andReturn().getResponse();
-
-        
-        Assertions.assertThat(httpServletResponse.getStatus()).isEqualTo(404);
-        Assertions.assertThat(httpServletResponse.getContentAsString()).isEqualTo("Error: usuário não encontrado");
 
         this.noteRepository.deleteAll();
         this.userRepository.deleteAll();
@@ -121,7 +91,7 @@ public class NoteControllerDeleteTests {
 
         MockHttpServletResponse httpServletResponse = this.mockMvc.perform(
             delete("/note/" + UUID.randomUUID().toString())
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
         ).andReturn().getResponse();
 
         Assertions.assertThat(httpServletResponse.getStatus()).isEqualTo(404);

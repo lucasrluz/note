@@ -58,19 +58,4 @@ public class NoteServiceSaveTests {
         Assertions.assertThat(noteDTOSaveResponse.title).isEqualTo(noteModelMock.title);
         Assertions.assertThat(noteDTOSaveResponse.content).isEqualTo(noteModelMock.content);
     }
-
-    @Test
-    public void esperoQueRetorneUmErroDeUsuarioNaoEncontrado() throws InvalidNoteDomainException, BadRequestException {
-        // Mocks
-        Optional<UserModel> userModelOptional = Optional.empty();
-        BDDMockito.when(this.userRepository.findById(ArgumentMatchers.any())).thenReturn(userModelOptional);
-
-        // Teste principal
-        NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
-        noteDTOSaveRequest.userId = UUID.randomUUID().toString();
-
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.save(noteDTOSaveRequest))
-            .withMessage("Error: usuário não encontrado");
-    }
 }

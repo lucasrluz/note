@@ -68,7 +68,7 @@ public class NoteControllerUpdateTests {
 
         this.mockMvc.perform(
             put("/note")
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOUpdateRequest)))
             .andExpect(status().isOk())
@@ -103,7 +103,7 @@ public class NoteControllerUpdateTests {
 
         this.mockMvc.perform(
             put("/note")
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOUpdateRequest)))
             .andExpect(status().isBadRequest())
@@ -136,7 +136,7 @@ public class NoteControllerUpdateTests {
 
         this.mockMvc.perform(
             put("/note")
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOUpdateRequest)))
             .andExpect(status().isBadRequest())
@@ -166,7 +166,7 @@ public class NoteControllerUpdateTests {
 
         this.mockMvc.perform(
             put("/note")
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOUpdateRequest)))
             .andExpect(status().isNotFound())

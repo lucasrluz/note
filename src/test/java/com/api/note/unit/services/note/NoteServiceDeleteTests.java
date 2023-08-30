@@ -54,20 +54,6 @@ public class NoteServiceDeleteTests {
     }
 
     @Test
-    public void esperoQuerRetorneUmErroDeUsuarioNaoContrado() throws BadRequestException {
-        // Mocks
-        Optional<UserModel> userModelOptionalMock = Optional.empty();
-        BDDMockito.when(this.userRepository.findById(ArgumentMatchers.any())).thenReturn(userModelOptionalMock);
-
-        // Teste principal
-        NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        
-        Assertions.assertThatExceptionOfType(BadRequestException.class)
-            .isThrownBy(() -> this.noteService.delete(noteDTODeleteRequest))
-            .withMessage("Error: usuário não encontrada");
-        }
-
-    @Test
     public void esperoQueRetorneUmErroDeNotaNaoEncontrada() throws BadRequestException {
         // Mocks
         UserModel userModelMock = UserModelBuilder.createWithValidData();

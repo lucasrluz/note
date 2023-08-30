@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import java.util.UUID;
 import static org.hamcrest.CoreMatchers.is;
 import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.models.NoteModel;
@@ -63,7 +62,7 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -98,7 +97,7 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isCreated())
@@ -128,7 +127,7 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -156,7 +155,7 @@ public class NoteControllerTests {
 
         this.mockMvc.perform(
             post(url)
-            .header("JWT", jwt)
+            .header("Authorization", "Bearer " + jwt)
             .contentType("application/json")
             .content(asJsonString(noteDTOSaveRequest)))
             .andExpect(status().isBadRequest())
@@ -164,24 +163,5 @@ public class NoteControllerTests {
 
         // Limpeza de dados do ambiente
         this.userRepository.deleteAll();
-    }
-
-    @Test
-    public void esperoQueRetorneUmCodigoDeStatus404ComUmaMessagemDeErroDeUsuarioNaoEncontrado() throws Exception {
-        // Teste principal
-        NoteDTOSaveRequest noteDTOSaveRequest = NoteDTOSaveRequestBuilder.createWithValidData();
-
-        // JWT
-        String jwt = this.jwtService.generateJwt(UUID.randomUUID().toString());
-        
-        String url = "/note";
-
-        this.mockMvc.perform(
-            post(url)
-            .header("JWT", jwt)
-            .contentType("application/json")
-            .content(asJsonString(noteDTOSaveRequest)))
-            .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$", is("Error: usuário não encontrado")));
     }
 }
