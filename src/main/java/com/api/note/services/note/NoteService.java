@@ -45,9 +45,6 @@ public class NoteService {
             UUID.fromString(noteDTOSaveRequest.userId)
         );
 
-        if (findUserByUserIdResponse.isEmpty()) {
-            throw new BadRequestException("Error: usuário não encontrado");
-        }
 
         NoteModel noteModel = new NoteModel(
             noteDomain.getTitle(),
@@ -68,10 +65,6 @@ public class NoteService {
         Optional<UserModel> findUserModelByUserIdResponse = this.userRepository.findById(
             UUID.fromString(noteDTOFindByUserIdRequest.userId)
         );
-
-        if (findUserModelByUserIdResponse.isEmpty()) {
-            throw new BadRequestException("Error: usuário não encontrado");
-        }
 
         List<NoteModel> findNotesByUserIdResponse = this.noteRepository.findByUserModel(
             findUserModelByUserIdResponse.get()
@@ -96,10 +89,6 @@ public class NoteService {
         Optional<UserModel> findUserModelByUserIdResponse = this.userRepository.findById(
             UUID.fromString(noteDTOFindByTitleRequest.userId)
         );
-
-        if (findUserModelByUserIdResponse.isEmpty()) {
-            throw new BadRequestException("Error: usuário não encontrado");
-        }
 
         List<NoteModel> findNotesByTitleResponse = this.noteRepository.findByTitleAndUserModel(
             noteDTOFindByTitleRequest.title,
@@ -163,10 +152,6 @@ public class NoteService {
         Optional<UserModel> findUserModelResponse = this.userRepository.findById(
             UUID.fromString(noteDTODeleteRequest.userId)
         );
-
-        if (findUserModelResponse.isEmpty()) {
-            throw new BadRequestException("Error: usuário não encontrado");
-        }
 
         Optional<NoteModel> findNoteModelResponse = this.noteRepository.findByNoteIdAndUserModel(
             UUID.fromString(noteDTODeleteRequest.noteId),
