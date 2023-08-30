@@ -3,6 +3,7 @@ package com.api.note.controllers.note;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +24,6 @@ import com.api.note.dtos.note.NoteDTOSaveRequest;
 import com.api.note.dtos.note.NoteDTOSaveResponse;
 import com.api.note.dtos.note.NoteDTOUpdateRequest;
 import com.api.note.dtos.note.NoteDTOUpdateResponse;
-import com.api.note.services.auth.AuthService;
 import com.api.note.services.note.NoteService;
 
 @CrossOrigin(origins = "*")
@@ -33,19 +32,14 @@ import com.api.note.services.note.NoteService;
 public class NoteController {
     private NoteService noteService;
 
-    private AuthService authService;
-
-    public NoteController(NoteService noteService, AuthService authService) {
+    public NoteController(NoteService noteService) {
         this.noteService = noteService;
-        this.authService = authService;
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody NoteDTOSaveRequest noteDTOSaveRequest, @RequestHeader("JWT") String jwt) {
+    public ResponseEntity<Object> save(@RequestBody NoteDTOSaveRequest noteDTOSaveRequest, Authentication authentication) {
         try {
-            String userId = this.authService.authenticate(jwt);
-
-            noteDTOSaveRequest.userId = userId;
+            noteDTOSaveRequest.userId = authentication.getName();
 
             NoteDTOSaveResponse noteDTOSaveResponse = this.noteService.save(noteDTOSaveRequest);
         
@@ -62,9 +56,9 @@ public class NoteController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findByUserId(@RequestHeader("JWT") String jwt) {
+    public ResponseEntity<Object> findByUserId(Authentication authentication) {
         try {
-            String userId = this.authService.authenticate(jwt);
+            String userId = authentication.getName();
 
             NoteDTOFindByUserIdRequest noteDTOFindByUserIdRequest = new NoteDTOFindByUserIdRequest(userId);
 
@@ -79,9 +73,9 @@ public class NoteController {
     }
 
     @GetMapping("/title")
-    public ResponseEntity<Object> findByTitle(@RequestBody NoteDTOFindByTitleRequest noteDTOFindByTitleRequest, @RequestHeader("JWT") String jwt) {
+    public ResponseEntity<Object> findByTitle(@RequestBody NoteDTOFindByTitleRequest noteDTOFindByTitleRequest, Authentication authentication) {
         try {
-            String userId = this.authService.authenticate(jwt);
+            String userId = authentication.getName();
 
             noteDTOFindByTitleRequest.userId = userId;
 
@@ -96,9 +90,9 @@ public class NoteController {
     }
 
     @PutMapping
-    public ResponseEntity<Object> update(@RequestBody NoteDTOUpdateRequest noteDTOUpdateRequest, @RequestHeader("JWT") String jwt) {
+    public ResponseEntity<Object> update(@RequestBody NoteDTOUpdateRequest noteDTOUpdateRequest, Authentication authentication) {
         try {
-            String userId = this.authService.authenticate(jwt);
+            String userId = authentication.getName();
 
             noteDTOUpdateRequest.userId = userId;
 
@@ -115,9 +109,9 @@ public class NoteController {
     }
 
     @DeleteMapping("/{noteId}")
-    public ResponseEntity<Object> delete(@PathVariable String noteId , @RequestHeader("JWT") String jwt) {
+    public ResponseEntity<Object> delete(@PathVariable String noteId, Authentication authentication) {
         try {
-            String userId = this.authService.authenticate(jwt);
+            String userId = authentication.getName();
             
             NoteDTODeleteRequest noteDTODeleteRequest = new NoteDTODeleteRequest(noteId, userId);
 
